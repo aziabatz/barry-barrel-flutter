@@ -1,0 +1,40 @@
+{
+  "name": "BarryBarrel",
+  "css_prefix_text": "",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "61aeb0c22b7b88f5593d08e26689a71f",
+      "css": "filter",
+      "code": 61616,
+      "src": "fontawesome5"
+    },
+    {
+      "uid": "7472fe2c3787ab610355cddcf4e199ba",
+      "css": "home",
+      "code": 61461,
+      "src": "fontawesome5"
+    },
+    {
+      "uid": "a73c5deb486c8d66249811642e5d719a",
+      "css": "arrows-cw",
+      "code": 59392,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "5bb103cd29de77e0e06a52638527b575",
+      "css": "wrench",
+      "code": 59393,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "7c1b3f1526b57c4ff825ae9979aaae5f",
+      "css": "barcode",
+      "code": 61482,
+      "src": "fontawesome5"
+    }
+  ]
+}
