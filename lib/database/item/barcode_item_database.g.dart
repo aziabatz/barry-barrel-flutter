@@ -164,7 +164,7 @@ class _$BarcodeItemDao extends BarcodeItemDao {
 
   @override
   Future<List<BarcodeItemEntity>> findAllItems() async {
-    return _queryAdapter.queryList('SELECT * FROM InventoryItem',
+    return _queryAdapter.queryList('SELECT * FROM barcode_items',
         mapper: (Map<String, Object?> row) => BarcodeItemEntity(
             row['id'] as int,
             row['barcode'] as String,
@@ -181,6 +181,12 @@ class _$BarcodeItemDao extends BarcodeItemDao {
   Future<void> insertItem(BarcodeItemEntity item) async {
     await _barcodeItemEntityInsertionAdapter.insert(
         item, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> insertAll(List<BarcodeItemEntity> items) async {
+    await _barcodeItemEntityInsertionAdapter.insertList(
+        items, OnConflictStrategy.replace);
   }
 
   @override

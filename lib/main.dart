@@ -1,4 +1,5 @@
 import 'package:bbarr/check_platform.dart';
+import 'package:bbarr/database/item/barcode_item_entity.dart';
 import 'package:bbarr/fragments/home/barcode_list.dart';
 import 'package:bbarr/fragments/scan/scan_screen.dart';
 
@@ -11,6 +12,64 @@ import 'dart:io';
 List<CameraDescription> cameras = [];
 late BarcodeItemDatabase database;
 
+final List<BarcodeItemEntity> barcodeItems = [
+  BarcodeItemEntity(
+    1,
+    '123456789',
+    'Producto A',
+    10,
+    9.99,
+    '2023-09-23',
+    'Proveedor 1',
+    'Almacén 1',
+    'Notas sobre el producto A',
+  ),
+  BarcodeItemEntity(
+    2,
+    '987654321',
+    'Producto B',
+    20,
+    19.99,
+    '2023-09-24',
+    'Proveedor 2',
+    'Almacén 2',
+    'Notas sobre el producto B',
+  ),
+  BarcodeItemEntity(
+    3,
+    '555555555',
+    'Producto C',
+    5,
+    49.99,
+    '2023-09-25',
+    'Proveedor 3',
+    'Almacén 3',
+    'Notas sobre el producto C',
+  ),
+  BarcodeItemEntity(
+    4,
+    '777777777',
+    'Producto D',
+    15,
+    29.99,
+    '2023-09-26',
+    'Proveedor 4',
+    'Almacén 4',
+    'Notas sobre el producto D',
+  ),
+  BarcodeItemEntity(
+    5,
+    '999999999',
+    'Producto E',
+    8,
+    39.99,
+    '2023-09-27',
+    'Proveedor 5',
+    'Almacén 5',
+    'Notas sobre el producto E',
+  ),
+];
+
 Future<void> main() async{
   try {
     WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +77,10 @@ Future<void> main() async{
       cameras = await availableCameras();
 
     database = await $FloorBarcodeItemDatabase.databaseBuilder('inventory_test.db').build();
+    final dao = database.barcodeItemDao;
+    dao.insertAll(barcodeItems);
+
+    
   } on CameraException catch (e) {
     print('Error in fetching the cameras: $e');
   }
@@ -92,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
       children: [
         Container(
           child: Center(
-            child: BarcodeList().list,//ListView.builder(itemBuilder: itemBuilder),
+            child: BarcodeList(),//ListView.builder(itemBuilder: itemBuilder),
           )
         ),
         Container(

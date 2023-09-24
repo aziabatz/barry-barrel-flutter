@@ -3,11 +3,14 @@ import 'package:floor/floor.dart';
 
 @dao
 abstract class BarcodeItemDao {
-  @Query('SELECT * FROM InventoryItem')
+  @Query('SELECT * FROM barcode_items')
   Future<List<BarcodeItemEntity>> findAllItems();
 
   @insert
   Future<void> insertItem(BarcodeItemEntity item);
+
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> insertAll(List<BarcodeItemEntity> items);
 
   @update
   Future<void> updateItem(BarcodeItemEntity item);

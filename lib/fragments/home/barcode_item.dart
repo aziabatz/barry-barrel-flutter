@@ -5,7 +5,23 @@ import 'package:flutter/widgets.dart';
 
 class BarcodeItemWidget extends StatefulWidget{
 
-  BarcodeItemWidget();
+  late String? _thumbnail;
+  late String _barcode, _title, _date;
+  late bool _bookmarked;
+
+  BarcodeItemWidget(
+    String barcode,
+    String? thumbnail,
+    String title,
+    String date,
+    bool bookmarked
+  ){
+    _thumbnail = thumbnail;
+    _barcode = barcode;
+    _title = title;
+    _date = date;
+    _bookmarked = bookmarked;
+  }
 
   @override
   State<BarcodeItemWidget> createState() => _createBookmarkState();
@@ -14,10 +30,12 @@ class BarcodeItemWidget extends StatefulWidget{
 class _createBookmarkState extends State<BarcodeItemWidget>{
   _createBookmarkState();
 
-  bool _isBookmark = false;
+  //bool _isBookmark = false;
+
 
   @override
   Widget build(BuildContext context) {
+    
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -27,21 +45,25 @@ class _createBookmarkState extends State<BarcodeItemWidget>{
             Container(child: Image.asset("assets/barcode.png",
             fit: BoxFit.contain,),
             width: 84,),
-            Center(child: Text("1234567890"),)
+            Center(child: Text(widget._barcode),)
           ],
         ),
-        Column(children: [
-          Text("Lorem Ipsum",
+         Expanded(
+          child: Column(children: [
+          Text(widget._title,
             overflow: TextOverflow.ellipsis,),
-          Text("Date of creation 12/04/02",
+          Text("Date of creation ${widget._date}",
             overflow: TextOverflow.ellipsis,)
         ],crossAxisAlignment: CrossAxisAlignment.start,),
-        Spacer(),
+        ),
+        
+        
+
         Container(
           padding: EdgeInsets.all(0),
           alignment: Alignment.centerRight,
           child: IconButton(
-            icon: (_isBookmark ? Icon(Icons.star) : Icon(Icons.star_border)),
+            icon: (widget._bookmarked ? Icon(Icons.star) : Icon(Icons.star_border)),
             color: Colors.red[500],
             onPressed: _toggleFavorite,
           ),
@@ -62,7 +84,7 @@ class _createBookmarkState extends State<BarcodeItemWidget>{
 
   void _toggleFavorite() {
     setState(() {
-      _isBookmark = !_isBookmark;
+      widget._bookmarked = !widget._bookmarked;
     });
   }
 }
