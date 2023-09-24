@@ -3,34 +3,32 @@ import 'package:bbarr/main.dart';
 import 'package:flutter/material.dart';
 
 class DetailsScreen extends StatelessWidget {
-
   //late int _id;
   late BarcodeItemEntity item;
 
   final int id;
 
-  DetailsScreen({super.key, required this.id}){
-    database.barcodeItemDao.findItemById(id).then((value){
-      if(value != null){
+  DetailsScreen({super.key, required this.id}) {
+    database.barcodeItemDao.findItemById(id).then((value) {
+      if (value != null) {
         item = value;
       }
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          // TRY THIS: Try changing the color here to a specific color (to
-          // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-          // change color while the other colors stay the same.
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: const Text("More details"),
-        ),
-        body: FutureBuilder<BarcodeItemEntity?>(
+      appBar: AppBar(
+        // TRY THIS: Try changing the color here to a specific color (to
+        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // change color while the other colors stay the same.
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: const Text("More details"),
+      ),
+      body: FutureBuilder<BarcodeItemEntity?>(
         future: database.barcodeItemDao.findItemById(this.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -41,72 +39,67 @@ class DetailsScreen extends StatelessWidget {
             return Center(child: Text('Elemento no encontrado.'));
           } else {
             final item = snapshot.data!;
-            return  SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                width: 300,
-                child: Image.asset(
-                  "assets/barcode.png",
-                  fit: BoxFit.contain,
+            return SingleChildScrollView(
+                child: Column(
+              children: [
+                SizedBox(
+                  width: 300,
+                  child: Image.asset(
+                    "assets/barcode.png",
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
-              Center(
-                child: Text(item.nameDescription,
-                    style: const TextStyle(fontSize: 28)),
-              ),
-              Center(
-                child: GridView.count(
-                  scrollDirection: Axis.vertical,
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  children: [
-                    Container(
-                        color: Colors.amber.shade100,
-                        margin: const EdgeInsets.all(10),
-                        child: Center(
-                          child: Text("Creation Date: ${item.acquisitionDate}"),
-                        )
-                    ),
-                    Container(
-                        color: Colors.amber.shade100,
-                        margin: const EdgeInsets.all(10),
-                        child: Center(
-                          child: Text("Barcode: ${item.barcode}"),
-                        )
-                    ),
-                    Container(
-                        color: Colors.amber.shade100,
-                        margin: const EdgeInsets.all(10),
-                        child: Center(
-                          child: Text("Quantity: ${item.quantity}"),
-                        )
-                    ),
-                    Container(
-                        color: Colors.amber.shade100,
-                        margin: const EdgeInsets.all(10),
-                        child: const Center(
-                          child: Text("Description: LoremIpsum"),
-                        )
-                    ),
-                    Container(
-                        color: Colors.amber.shade100,
-                        margin: const EdgeInsets.all(10),
-                        child: const Center(
-                          child: Text("Creation Date: whatever"),
-                        )
-                    )
-                  ],
+                Center(
+                  child: Text(item.nameDescription,
+                      style: const TextStyle(fontSize: 28)),
                 ),
-              )
-            ],
-          ));
+                Center(
+                  child: GridView.count(
+                    scrollDirection: Axis.vertical,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    crossAxisCount: 2,
+                    children: [
+                      Container(
+                          color: Colors.amber.shade100,
+                          margin: const EdgeInsets.all(10),
+                          child: Center(
+                            child:
+                                Text("Creation Date: ${item.acquisitionDate}"),
+                          )),
+                      Container(
+                          color: Colors.amber.shade100,
+                          margin: const EdgeInsets.all(10),
+                          child: Center(
+                            child: Text("Barcode: ${item.barcode}"),
+                          )),
+                      Container(
+                          color: Colors.amber.shade100,
+                          margin: const EdgeInsets.all(10),
+                          child: Center(
+                            child: Text("Quantity: ${item.quantity}"),
+                          )),
+                      Container(
+                          color: Colors.amber.shade100,
+                          margin: const EdgeInsets.all(10),
+                          child: const Center(
+                            child: Text("Description: LoremIpsum"),
+                          )),
+                      Container(
+                          color: Colors.amber.shade100,
+                          margin: const EdgeInsets.all(10),
+                          child: const Center(
+                            child: Text("Creation Date: whatever"),
+                          ))
+                    ],
+                  ),
+                )
+              ],
+            ));
           }
         },
       ),
-        
-        );
+    );
   }
 }
 

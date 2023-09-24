@@ -1,12 +1,12 @@
-import 'package:bbarr/check_platform.dart';
+import 'package:bbarr/utils/check_platform.dart';
 import 'package:bbarr/database/item/barcode_item_entity.dart';
-import 'package:bbarr/fragments/home/barcode_list.dart';
-import 'package:bbarr/fragments/scan/scan_screen.dart';
+import 'package:bbarr/ui/navbar/fragments/home/barcode_list.dart';
+import 'package:bbarr/ui/navbar/fragments/scan/scan_screen.dart';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'database/item/barcode_item_database.dart';
-import 'navbar/icons/barry_barrel_icons.dart';
+import 'ui/navbar/icons/barry_barrel_icons.dart';
 
 List<CameraDescription> cameras = [];
 late BarcodeItemDatabase database;

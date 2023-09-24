@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:bbarr/check_platform.dart';
+import 'package:bbarr/utils/check_platform.dart';
 import 'package:bbarr/main.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/widgets.dart';
