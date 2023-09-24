@@ -1,7 +1,7 @@
-import 'dart:ffi';
 
+import 'package:bbarr/database/item/barcode_item_entity.dart';
+import 'package:bbarr/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class BarcodeItemWidget extends StatefulWidget{
 
@@ -9,12 +9,14 @@ class BarcodeItemWidget extends StatefulWidget{
   late String _barcode, _title, _date;
   late bool _bookmarked;
 
+  final int id;
+
   BarcodeItemWidget(
     String barcode,
     String? thumbnail,
     String title,
     String date,
-    bool bookmarked
+    bool bookmarked, {super.key, required this.id}
   ){
     _thumbnail = thumbnail;
     _barcode = barcode;
@@ -42,28 +44,27 @@ class _createBookmarkState extends State<BarcodeItemWidget>{
 
         Column(
           children: [
-            Container(child: Image.asset("assets/barcode.png",
-            fit: BoxFit.contain,),
-            width: 84,),
+            SizedBox(width: 84,child: Image.asset("assets/barcode.png",
+            fit: BoxFit.contain,),),
             Center(child: Text(widget._barcode),)
           ],
         ),
          Expanded(
-          child: Column(children: [
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
           Text(widget._title,
             overflow: TextOverflow.ellipsis,),
           Text("Date of creation ${widget._date}",
             overflow: TextOverflow.ellipsis,)
-        ],crossAxisAlignment: CrossAxisAlignment.start,),
+        ],),
         ),
         
         
 
         Container(
-          padding: EdgeInsets.all(0),
+          padding: const EdgeInsets.all(0),
           alignment: Alignment.centerRight,
           child: IconButton(
-            icon: (widget._bookmarked ? Icon(Icons.star) : Icon(Icons.star_border)),
+            icon: (widget._bookmarked ? const Icon(Icons.star) : const Icon(Icons.star_border)),
             color: Colors.red[500],
             onPressed: _toggleFavorite,
           ),
@@ -83,8 +84,20 @@ class _createBookmarkState extends State<BarcodeItemWidget>{
 
 
   void _toggleFavorite() {
-    setState(() {
-      widget._bookmarked = !widget._bookmarked;
-    });
+    Future<BarcodeItemEntity?> itemFuture = database.barcodeItemDao.findItemById(widget.id);
+      itemFuture.then((item){
+        if(item != null){
+          bool newBookmarkState = !item.favourite;
+          item.favourite = newBookmarkState;
+
+          database.barcodeItemDao.updateItem(item).then((value){
+            setState(() {
+              widget._bookmarked = newBookmarkState;
+            });
+          });
+        }
+        
+      });
+    
   }
 }

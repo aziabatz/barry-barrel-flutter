@@ -7,7 +7,7 @@ import 'barcode_item_entity.dart';
 
 part 'barcode_item_database.g.dart';
 
-@Database(version: 1, entities: [BarcodeItemEntity])
+@Database(version: 2, entities: [BarcodeItemEntity])
 abstract class BarcodeItemDatabase extends FloorDatabase {
   BarcodeItemDao get barcodeItemDao;
 }

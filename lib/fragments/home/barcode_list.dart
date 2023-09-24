@@ -2,7 +2,6 @@ import 'package:bbarr/database/item/barcode_item_entity.dart';
 import 'package:bbarr/details_screen.dart';
 import 'package:bbarr/fragments/home/barcode_item.dart';
 import 'package:bbarr/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BarcodeList extends StatelessWidget{
@@ -16,13 +15,13 @@ class BarcodeList extends StatelessWidget{
     return items;
   }
 
-  BarcodeList() {
+  BarcodeList({super.key}) {
 
     //devolver aqui la listview con los elementos desde retrieveitems
 
     //FIXME Make this a stateful 
 
-    print("REFRESH?");
+    //print("REFRESH?");
   }
   
   @override
@@ -33,15 +32,16 @@ class BarcodeList extends StatelessWidget{
 
         var items = snapshot.data;
 
-        items?.forEach((item) {
-          itemList.add(BarcodeItemWidget(
-            item.barcode,
+        if(items != null){
+          itemList = items.map((e) => BarcodeItemWidget(
+            e.barcode,
             null,
-            item.nameDescription,
+            e.nameDescription,
             "01/11/23",
-            false
-          ));
-        });
+            e.favourite,
+            id: e.id
+          )).toList();
+        }
 
         list = ListView.builder(
           itemCount: itemList.length,
@@ -52,10 +52,9 @@ class BarcodeList extends StatelessWidget{
               ),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => DetailsScreen(0)));
+                    MaterialPageRoute(builder: (context) => DetailsScreen(id: itemList[index].id)));
               },
             );
-            //itemList[index];
           },
         );
 
@@ -64,23 +63,3 @@ class BarcodeList extends StatelessWidget{
     );
   }
 }
-
-
-/*
-
-itemBuilder: (context, index) {
-        return ListTile(
-          title: IntrinsicWidth(
-            child: itemList[index],
-          ),
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) => DetailsScreen(0)
-            ));
-          },
-
-        );
-          //itemList[index];
-      },
-      itemCount: itemList.length,
-*/

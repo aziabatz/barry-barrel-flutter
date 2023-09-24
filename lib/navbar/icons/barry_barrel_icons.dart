@@ -29,6 +29,7 @@ class BarryBarrel {
   static const _kFontFam = 'BarryBarrel';
   static const String? _kFontPkg = null;
 
+  // ignore: constant_identifier_names
   static const IconData arrows_cw = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData wrench = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData home = IconData(0xf015, fontFamily: _kFontFam, fontPackage: _kFontPkg);

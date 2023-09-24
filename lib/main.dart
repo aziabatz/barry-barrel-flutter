@@ -7,7 +7,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'database/item/barcode_item_database.dart';
 import 'navbar/icons/barry_barrel_icons.dart';
-import 'dart:io';
 
 List<CameraDescription> cameras = [];
 late BarcodeItemDatabase database;
@@ -23,6 +22,7 @@ final List<BarcodeItemEntity> barcodeItems = [
     'Proveedor 1',
     'Almacén 1',
     'Notas sobre el producto A',
+    false
   ),
   BarcodeItemEntity(
     2,
@@ -34,6 +34,7 @@ final List<BarcodeItemEntity> barcodeItems = [
     'Proveedor 2',
     'Almacén 2',
     'Notas sobre el producto B',
+    false
   ),
   BarcodeItemEntity(
     3,
@@ -45,6 +46,7 @@ final List<BarcodeItemEntity> barcodeItems = [
     'Proveedor 3',
     'Almacén 3',
     'Notas sobre el producto C',
+    false
   ),
   BarcodeItemEntity(
     4,
@@ -56,6 +58,7 @@ final List<BarcodeItemEntity> barcodeItems = [
     'Proveedor 4',
     'Almacén 4',
     'Notas sobre el producto D',
+    false
   ),
   BarcodeItemEntity(
     5,
@@ -67,18 +70,23 @@ final List<BarcodeItemEntity> barcodeItems = [
     'Proveedor 5',
     'Almacén 5',
     'Notas sobre el producto E',
+    false
   ),
 ];
 
 Future<void> main() async{
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    if(!isDesktop)
+    if(!isDesktop) {
       cameras = await availableCameras();
+    }
 
+    //databaseFactory.deleteDatabase('inventory_test.db');
     database = await $FloorBarcodeItemDatabase.databaseBuilder('inventory_test.db').build();
-    final dao = database.barcodeItemDao;
-    dao.insertAll(barcodeItems);
+    
+    //barcodeItems.forEach((element) {dao.deleteItem(element);});
+
+    //dao.insertAll(barcodeItems);
 
     
   } on CameraException catch (e) {
@@ -153,23 +161,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return Expanded(child: IndexedStack(
       index: _barItem,
       children: [
-        Container(
-          child: Center(
-            child: BarcodeList(),//ListView.builder(itemBuilder: itemBuilder),
-          )
+        Center(
+          child: BarcodeList(),//ListView.builder(itemBuilder: itemBuilder),
         ),
-        Container(
-          child: Center(child: Text("FILTER"),),
-        ),
-        Container(
-          child: ScanScreen(),//Center(child: Text("SCAN"),),
-        ),
-        Container(
-          child: Center(child: Text("UPDATES"),),
-        ),
-        Container(
-          child: Center(child: Text("SETTINGS"),),
-        ),
+        const Center(child: Text("FILTER"),),
+        const ScanScreen(),
+        const Center(child: Text("UPDATES"),),
+        const Center(child: Text("SETTINGS"),),
       ],
     ));
   }
@@ -228,7 +226,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ],),
       floatingActionButton: FloatingActionButton(
         elevation: 10,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: (){},
       ),
     );

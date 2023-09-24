@@ -1,13 +1,21 @@
-import 'package:flutter/cupertino.dart';
+import 'package:bbarr/database/item/barcode_item_entity.dart';
+import 'package:bbarr/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class DetailsScreen extends StatelessWidget {
 
-  late int _id;
+  //late int _id;
+  late BarcodeItemEntity item;
 
-  DetailsScreen(int id){
-    _id = id;
+  final int id;
+
+  DetailsScreen({super.key, required this.id}){
+    database.barcodeItemDao.findItemById(id).then((value){
+      if(value != null){
+        item = value;
+      }
+    });
+
   }
 
   @override
@@ -20,62 +28,146 @@ class DetailsScreen extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: Text("Details screen"),
+          title: const Text("More details"),
         ),
-        body: SingleChildScrollView(
+        body: FutureBuilder<BarcodeItemEntity?>(
+        future: database.barcodeItemDao.findItemById(this.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return Center(child: Text('Elemento no encontrado.'));
+          } else {
+            final item = snapshot.data!;
+            return  SingleChildScrollView(
           child: Column(
             children: [
-              Container(
+              SizedBox(
+                width: 300,
                 child: Image.asset(
                   "assets/barcode.png",
                   fit: BoxFit.contain,
                 ),
-                width: 300,
               ),
               Center(
-                child: Text("1234567890",
-                    style: TextStyle(fontSize: 28)),
+                child: Text(item.nameDescription,
+                    style: const TextStyle(fontSize: 28)),
               ),
               Center(
                 child: GridView.count(
                   scrollDirection: Axis.vertical,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   crossAxisCount: 2,
                   children: [
                     Container(
                         color: Colors.amber.shade100,
-                        margin: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
                         child: Center(
-                          child: Text("Creation Date: 01-01-2023"),
+                          child: Text("Creation Date: ${item.acquisitionDate}"),
                         )
                     ),
                     Container(
                         color: Colors.amber.shade100,
-                        margin: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
                         child: Center(
-                          child: Text("Barcode: 012312438"),
+                          child: Text("Barcode: ${item.barcode}"),
                         )
                     ),
                     Container(
                         color: Colors.amber.shade100,
-                        margin: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
                         child: Center(
-                          child: Text("Quantity: 321"),
+                          child: Text("Quantity: ${item.quantity}"),
                         )
                     ),
                     Container(
                         color: Colors.amber.shade100,
-                        margin: EdgeInsets.all(10),
-                        child: Center(
+                        margin: const EdgeInsets.all(10),
+                        child: const Center(
                           child: Text("Description: LoremIpsum"),
                         )
                     ),
                     Container(
                         color: Colors.amber.shade100,
-                        margin: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
+                        child: const Center(
+                          child: Text("Creation Date: whatever"),
+                        )
+                    )
+                  ],
+                ),
+              )
+            ],
+          ));
+          }
+        },
+      ),
+        
+        );
+  }
+}
+
+/* 
+
+body: (item == null)? const Center(
+          child: Text("There was an error retrieving details about this item."),
+        ) : SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                width: 300,
+                child: Image.asset(
+                  "assets/barcode.png",
+                  fit: BoxFit.contain,
+                ),
+              ),
+              Center(
+                child: Text(item.nameDescription,
+                    style: const TextStyle(fontSize: 28)),
+              ),
+              Center(
+                child: GridView.count(
+                  scrollDirection: Axis.vertical,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  crossAxisCount: 2,
+                  children: [
+                    Container(
+                        color: Colors.amber.shade100,
+                        margin: const EdgeInsets.all(10),
                         child: Center(
-                          child: Text("Creation Date"),
+                          child: Text("Creation Date: ${item.acquisitionDate}"),
+                        )
+                    ),
+                    Container(
+                        color: Colors.amber.shade100,
+                        margin: const EdgeInsets.all(10),
+                        child: Center(
+                          child: Text("Barcode: ${item.barcode}"),
+                        )
+                    ),
+                    Container(
+                        color: Colors.amber.shade100,
+                        margin: const EdgeInsets.all(10),
+                        child: Center(
+                          child: Text("Quantity: ${item.quantity}"),
+                        )
+                    ),
+                    Container(
+                        color: Colors.amber.shade100,
+                        margin: const EdgeInsets.all(10),
+                        child: const Center(
+                          child: Text("Description: LoremIpsum"),
+                        )
+                    ),
+                    Container(
+                        color: Colors.amber.shade100,
+                        margin: const EdgeInsets.all(10),
+                        child: const Center(
+                          child: Text("Creation Date: whatever"),
                         )
                     )
                   ],
@@ -83,7 +175,5 @@ class DetailsScreen extends StatelessWidget {
               )
             ],
           )),
-        )
-        ;
-  }
-}
+
+*/

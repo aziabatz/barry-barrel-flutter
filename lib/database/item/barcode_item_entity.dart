@@ -6,14 +6,15 @@ class BarcodeItemEntity{
   @PrimaryKey(autoGenerate: true)
   final int id;
 
-  final String barcode;
-  final String nameDescription;
-  final int quantity;
-  final double price;
-  final String? acquisitionDate;
-  final String? provider;
-  final String? storageLocation;
-  final String? notes;
+  String barcode;
+  String nameDescription;
+  int quantity;
+  double price;
+  String acquisitionDate;
+  String? provider;
+  String? storageLocation;
+  String? notes;
+  bool favourite;
 
   BarcodeItemEntity(
     this.id,
@@ -24,6 +25,7 @@ class BarcodeItemEntity{
     this.acquisitionDate,
     this.provider,
     this.storageLocation,
-    this.notes
+    this.notes,
+    this.favourite
   );
 }

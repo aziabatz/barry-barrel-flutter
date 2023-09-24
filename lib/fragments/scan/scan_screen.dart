@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 
 
 class ScanScreen extends StatefulWidget{
+  const ScanScreen({super.key});
+
 
   @override
   State<StatefulWidget> createState() => _ScanScreenState();
@@ -21,8 +23,9 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver{
 
   @override
   void initState() {
-    if(!isDesktop)
+    if(!isDesktop) {
       onNewCameraSelected(cameras[0]);
+    }
     super.initState();
   }
 
@@ -30,8 +33,9 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver{
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     final CameraController? cameraController = controller;
-    if(cameraController == null || !cameraController.value.isInitialized)
+    if(cameraController == null || !cameraController.value.isInitialized) {
       return;
+    }
 
     if(state == AppLifecycleState.inactive){
       cameraController.dispose();
@@ -81,10 +85,8 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver{
   @override
   Widget build(BuildContext context) {
     if(Platform.isLinux || Platform.isWindows || Platform.isMacOS){
-      return Container(
-        child: Center(
-          child: Text("Barcode scan from camera is still not implemented in this platform"),
-        )
+      return const Center(
+        child: Text("Barcode scan from camera is still not implemented in this platform"),
       );
     }
     return _isCameraInit

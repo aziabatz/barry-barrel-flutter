@@ -69,7 +69,7 @@ class _$BarcodeItemDatabase extends BarcodeItemDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -85,7 +85,7 @@ class _$BarcodeItemDatabase extends BarcodeItemDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `barcode_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `barcode` TEXT NOT NULL, `nameDescription` TEXT NOT NULL, `quantity` INTEGER NOT NULL, `price` REAL NOT NULL, `acquisitionDate` TEXT, `provider` TEXT, `storageLocation` TEXT, `notes` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `barcode_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `barcode` TEXT NOT NULL, `nameDescription` TEXT NOT NULL, `quantity` INTEGER NOT NULL, `price` REAL NOT NULL, `acquisitionDate` TEXT NOT NULL, `provider` TEXT, `storageLocation` TEXT, `notes` TEXT, `favourite` INTEGER NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -117,7 +117,8 @@ class _$BarcodeItemDao extends BarcodeItemDao {
                   'acquisitionDate': item.acquisitionDate,
                   'provider': item.provider,
                   'storageLocation': item.storageLocation,
-                  'notes': item.notes
+                  'notes': item.notes,
+                  'favourite': item.favourite ? 1 : 0
                 }),
         _barcodeItemEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -132,7 +133,8 @@ class _$BarcodeItemDao extends BarcodeItemDao {
                   'acquisitionDate': item.acquisitionDate,
                   'provider': item.provider,
                   'storageLocation': item.storageLocation,
-                  'notes': item.notes
+                  'notes': item.notes,
+                  'favourite': item.favourite ? 1 : 0
                 }),
         _barcodeItemEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -147,7 +149,8 @@ class _$BarcodeItemDao extends BarcodeItemDao {
                   'acquisitionDate': item.acquisitionDate,
                   'provider': item.provider,
                   'storageLocation': item.storageLocation,
-                  'notes': item.notes
+                  'notes': item.notes,
+                  'favourite': item.favourite ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -171,10 +174,28 @@ class _$BarcodeItemDao extends BarcodeItemDao {
             row['nameDescription'] as String,
             row['quantity'] as int,
             row['price'] as double,
-            row['acquisitionDate'] as String?,
+            row['acquisitionDate'] as String,
             row['provider'] as String?,
             row['storageLocation'] as String?,
-            row['notes'] as String?));
+            row['notes'] as String?,
+            (row['favourite'] as int) != 0));
+  }
+
+  @override
+  Future<BarcodeItemEntity?> findItemById(int id) async {
+    return _queryAdapter.query('SELECT * FROM barcode_items WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => BarcodeItemEntity(
+            row['id'] as int,
+            row['barcode'] as String,
+            row['nameDescription'] as String,
+            row['quantity'] as int,
+            row['price'] as double,
+            row['acquisitionDate'] as String,
+            row['provider'] as String?,
+            row['storageLocation'] as String?,
+            row['notes'] as String?,
+            (row['favourite'] as int) != 0),
+        arguments: [id]);
   }
 
   @override

@@ -6,6 +6,9 @@ abstract class BarcodeItemDao {
   @Query('SELECT * FROM barcode_items')
   Future<List<BarcodeItemEntity>> findAllItems();
 
+  @Query('SELECT * FROM barcode_items WHERE id = :id')
+  Future<BarcodeItemEntity?> findItemById(int id);
+
   @insert
   Future<void> insertItem(BarcodeItemEntity item);
 
