@@ -1,5 +1,5 @@
 import 'package:bbarr/database/item/barcode_item_entity.dart';
-import 'package:bbarr/ui/details_screen.dart';
+import 'package:bbarr/ui/details/details_screen.dart';
 import 'package:bbarr/ui/navbar/fragments/home/barcode_item.dart';
 import 'package:bbarr/main.dart';
 import 'package:flutter/material.dart';

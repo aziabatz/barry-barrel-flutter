@@ -1,3 +1,4 @@
+import 'package:bbarr/ui/add_edit/edit_screen.dart';
 import 'package:bbarr/utils/check_platform.dart';
 import 'package:bbarr/database/item/barcode_item_entity.dart';
 import 'package:bbarr/ui/navbar/fragments/home/barcode_list.dart';
@@ -12,83 +13,33 @@ List<CameraDescription> cameras = [];
 late BarcodeItemDatabase database;
 
 final List<BarcodeItemEntity> barcodeItems = [
-  BarcodeItemEntity(
-    1,
-    '123456789',
-    'Producto A',
-    10,
-    9.99,
-    '2023-09-23',
-    'Proveedor 1',
-    'Almacén 1',
-    'Notas sobre el producto A',
-    false
-  ),
-  BarcodeItemEntity(
-    2,
-    '987654321',
-    'Producto B',
-    20,
-    19.99,
-    '2023-09-24',
-    'Proveedor 2',
-    'Almacén 2',
-    'Notas sobre el producto B',
-    false
-  ),
-  BarcodeItemEntity(
-    3,
-    '555555555',
-    'Producto C',
-    5,
-    49.99,
-    '2023-09-25',
-    'Proveedor 3',
-    'Almacén 3',
-    'Notas sobre el producto C',
-    false
-  ),
-  BarcodeItemEntity(
-    4,
-    '777777777',
-    'Producto D',
-    15,
-    29.99,
-    '2023-09-26',
-    'Proveedor 4',
-    'Almacén 4',
-    'Notas sobre el producto D',
-    false
-  ),
-  BarcodeItemEntity(
-    5,
-    '999999999',
-    'Producto E',
-    8,
-    39.99,
-    '2023-09-27',
-    'Proveedor 5',
-    'Almacén 5',
-    'Notas sobre el producto E',
-    false
-  ),
+  BarcodeItemEntity(1, '123456789', 'Producto A', 10, 9.99, '2023-09-23',
+      'Proveedor 1', 'Almacén 1', 'Notas sobre el producto A', false),
+  BarcodeItemEntity(2, '987654321', 'Producto B', 20, 19.99, '2023-09-24',
+      'Proveedor 2', 'Almacén 2', 'Notas sobre el producto B', false),
+  BarcodeItemEntity(3, '555555555', 'Producto C', 5, 49.99, '2023-09-25',
+      'Proveedor 3', 'Almacén 3', 'Notas sobre el producto C', false),
+  BarcodeItemEntity(4, '777777777', 'Producto D', 15, 29.99, '2023-09-26',
+      'Proveedor 4', 'Almacén 4', 'Notas sobre el producto D', false),
+  BarcodeItemEntity(5, '999999999', 'Producto E', 8, 39.99, '2023-09-27',
+      'Proveedor 5', 'Almacén 5', 'Notas sobre el producto E', false),
 ];
 
-Future<void> main() async{
+Future<void> main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    if(!isDesktop) {
+    if (!isDesktop) {
       cameras = await availableCameras();
     }
 
     //databaseFactory.deleteDatabase('inventory_test.db');
-    database = await $FloorBarcodeItemDatabase.databaseBuilder('inventory_test.db').build();
-    
+    database = await $FloorBarcodeItemDatabase
+        .databaseBuilder('inventory_test.db')
+        .build();
+
     //barcodeItems.forEach((element) {dao.deleteItem(element);});
 
     //dao.insertAll(barcodeItems);
-
-    
   } on CameraException catch (e) {
     print('Error in fetching the cameras: $e');
   }
@@ -149,25 +100,33 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _barItem = 0;
 
-  List<String> items = List<String>.generate(12321, (index) => "Item number #$index");
+  List<String> items =
+      List<String>.generate(12321, (index) => "Item number #$index");
 
-  void _onItemTap(int index){
+  void _onItemTap(int index) {
     setState(() {
       _barItem = index;
     });
   }
 
-  Widget _stackedContainers(){
-    return Expanded(child: IndexedStack(
+  Widget _stackedContainers() {
+    return Expanded(
+        child: IndexedStack(
       index: _barItem,
       children: [
         Center(
-          child: BarcodeList(),//ListView.builder(itemBuilder: itemBuilder),
+          child: BarcodeList(), //ListView.builder(itemBuilder: itemBuilder),
         ),
-        const Center(child: Text("FILTER"),),
+        const Center(
+          child: Text("FILTER"),
+        ),
         const ScanScreen(),
-        const Center(child: Text("UPDATES"),),
-        const Center(child: Text("SETTINGS"),),
+        const Center(
+          child: Text("UPDATES"),
+        ),
+        const Center(
+          child: Text("SETTINGS"),
+        ),
       ],
     ));
   }
@@ -193,7 +152,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: <Widget>[
           _stackedContainers(),
-        ],),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         //backgroundColor: Colors.amber.shade100,
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -202,32 +162,26 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: _onItemTap,
         type: BottomNavigationBarType.fixed,
         items: const [
-        BottomNavigationBarItem(
-          icon: Icon(BarryBarrel.home),
-          label: "Home"
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(BarryBarrel.filter),
-          label: "Filter"
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(BarryBarrel.barcode),
-          label: "Scan"
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(BarryBarrel.arrows_cw),
-          label: "Updates"
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(BarryBarrel.wrench),
-          label: "Settings"
-        ),
-
-      ],),
+          BottomNavigationBarItem(icon: Icon(BarryBarrel.home), label: "Home"),
+          BottomNavigationBarItem(
+              icon: Icon(BarryBarrel.filter), label: "Filter"),
+          BottomNavigationBarItem(
+              icon: Icon(BarryBarrel.barcode), label: "Scan"),
+          BottomNavigationBarItem(
+              icon: Icon(BarryBarrel.arrows_cw), label: "Updates"),
+          BottomNavigationBarItem(
+              icon: Icon(BarryBarrel.wrench), label: "Settings"),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         elevation: 10,
         child: const Icon(Icons.add),
-        onPressed: (){},
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EditScreen()));
+        },
       ),
     );
   }
