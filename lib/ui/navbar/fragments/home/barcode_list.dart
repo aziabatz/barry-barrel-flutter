@@ -4,7 +4,7 @@ import 'package:bbarr/ui/navbar/fragments/home/barcode_item.dart';
 import 'package:bbarr/main.dart';
 import 'package:flutter/material.dart';
 
-class BarcodeList extends StatelessWidget{
+class BarcodeList extends StatelessWidget {
   List<BarcodeItemWidget> itemList = [];
 
   late ListView list;
@@ -16,45 +16,105 @@ class BarcodeList extends StatelessWidget{
   }
 
   BarcodeList({super.key}) {
-
     //devolver aqui la listview con los elementos desde retrieveitems
 
-    //FIXME Make this a stateful 
+    //FIXME Make this a stateful
 
     //print("REFRESH?");
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _retrieveItems(),
       builder: (context, snapshot) {
-
         var items = snapshot.data;
 
-        if(items != null){
-          itemList = items.map((e) => BarcodeItemWidget(
-            e.barcode,
-            null,
-            e.nameDescription,
-            "01/11/23",
-            e.favourite,
-            id: e.id
-          )).toList();
+        if (items != null) {
+          itemList = items
+              .map((e) => BarcodeItemWidget(
+                  e.barcode, null, e.nameDescription, "01/11/23", e.favourite,
+                  id: e.id))
+              .toList();
         }
 
         list = ListView.builder(
           itemCount: itemList.length,
           itemBuilder: (context, index) {
-            return ListTile(
-              title: IntrinsicWidth(
-                child: itemList[index],
-              ),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => DetailsScreen(id: itemList[index].id)));
-              },
-            );
+            return InkWell(
+                onLongPress: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => SimpleDialog(
+                            title: const Text('More options'),
+                            children: [
+                              SimpleDialogOption(
+                                onPressed: () {
+                                },
+                                child: const Row(
+                                  
+                                  children: [
+                                    Icon(Icons.edit),
+                                    SizedBox(width: 25,),
+                                    Text("Edit item")
+                                  ],
+
+                                )
+                              ),
+                              SimpleDialogOption(
+                                onPressed: () {
+                                },
+                                child: const Row(
+                                  
+                                  children: [
+                                    Icon(Icons.delete),
+                                    SizedBox(width: 25,),
+                                    Text("Remove item")
+                                  ],
+
+                                )
+                              ),
+                              SimpleDialogOption(
+                                onPressed: () {
+                                },
+                                child: const Row(
+                                  
+                                  children: [
+                                    Icon(Icons.info),
+                                    SizedBox(width: 25,),
+                                    Text("More details")
+                                  ],
+
+                                )
+                              ),
+                              SimpleDialogOption(
+                                onPressed: () {
+                                },
+                                child: const Row(
+                                  
+                                  children: [
+                                    Icon(Icons.share),
+                                    SizedBox(width: 25,),
+                                    Text("Share")
+                                  ],
+
+                                )
+                              ),
+                            ],
+                          ));
+                },
+                child: ListTile(
+                  title: IntrinsicWidth(
+                    child: itemList[index],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                DetailsScreen(id: itemList[index].id)));
+                  },
+                ));
           },
         );
 
