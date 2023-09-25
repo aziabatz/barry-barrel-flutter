@@ -1,4 +1,5 @@
 import 'package:bbarr/database/item/barcode_item_entity.dart';
+import 'package:bbarr/ui/add_edit/edit_screen.dart';
 import 'package:bbarr/ui/details/details_screen.dart';
 import 'package:bbarr/ui/navbar/fragments/home/barcode_item.dart';
 import 'package:bbarr/main.dart';
@@ -118,7 +119,23 @@ class BarcodeList extends StatelessWidget {
           },
         );
 
-        return list;
+        return Stack(
+          children: [
+            list,
+            Positioned(
+              right: 15,
+              bottom: 15,
+              child: FloatingActionButton(
+                elevation: 10,
+                child: const Icon(Icons.add),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => EditScreen()));
+                },
+              ),
+            ),
+          ],
+        );
       },
     );
   }
