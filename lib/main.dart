@@ -115,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
       index: _barItem,
       children: [
         Center(
-          child: BarcodeList(), //ListView.builder(itemBuilder: itemBuilder),
+          child: BarcodeList(),
         ),
         const Center(
           child: Text("FILTER"),
@@ -173,16 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(BarryBarrel.wrench), label: "Settings"),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        elevation: 10,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => EditScreen()));
-        },
-      ),
+      
     );
   }
 }
