@@ -42,18 +42,80 @@ class BarcodeList extends StatelessWidget {
         list = ListView.builder(
           itemCount: itemList.length,
           itemBuilder: (context, index) {
-            return ListTile(
-              title: IntrinsicWidth(
-                child: itemList[index],
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            DetailsScreen(id: itemList[index].id)));
-              },
-            );
+            return InkWell(
+                onLongPress: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => SimpleDialog(
+                            title: const Text('More options'),
+                            children: [
+                              SimpleDialogOption(
+                                onPressed: () {
+                                },
+                                child: const Row(
+                                  
+                                  children: [
+                                    Icon(Icons.edit),
+                                    SizedBox(width: 25,),
+                                    Text("Edit item")
+                                  ],
+
+                                )
+                              ),
+                              SimpleDialogOption(
+                                onPressed: () {
+                                },
+                                child: const Row(
+                                  
+                                  children: [
+                                    Icon(Icons.delete),
+                                    SizedBox(width: 25,),
+                                    Text("Remove item")
+                                  ],
+
+                                )
+                              ),
+                              SimpleDialogOption(
+                                onPressed: () {
+                                },
+                                child: const Row(
+                                  
+                                  children: [
+                                    Icon(Icons.info),
+                                    SizedBox(width: 25,),
+                                    Text("More details")
+                                  ],
+
+                                )
+                              ),
+                              SimpleDialogOption(
+                                onPressed: () {
+                                },
+                                child: const Row(
+                                  
+                                  children: [
+                                    Icon(Icons.share),
+                                    SizedBox(width: 25,),
+                                    Text("Share")
+                                  ],
+
+                                )
+                              ),
+                            ],
+                          ));
+                },
+                child: ListTile(
+                  title: IntrinsicWidth(
+                    child: itemList[index],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                DetailsScreen(id: itemList[index].id)));
+                  },
+                ));
           },
         );
 
