@@ -44,6 +44,7 @@ dependencies:
   build_runner: ^2.4.6
   sqlite3_flutter_libs: ^0.5.17
   sqlite3: ^2.1.0
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
