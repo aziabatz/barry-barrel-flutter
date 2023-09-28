@@ -45,6 +45,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.17
   sqlite3: ^2.1.0
   intl: ^0.17.0
+  backdrop: ^0.9.1
 
 dev_dependencies:
   flutter_test:

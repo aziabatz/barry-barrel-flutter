@@ -8,10 +8,6 @@ import 'package:flutter/material.dart';
 class BarcodeList extends StatefulWidget {
   BarcodeList({super.key}) {
     //devolver aqui la listview con los elementos desde retrieveitems
-
-    //FIXME Make this a stateful?
-
-    //print("REFRESH?");
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:bbarr/ui/add_edit/edit_screen.dart';
+import 'package:bbarr/ui/navbar/fragments/filter/barcode_filter.dart';
 import 'package:bbarr/ui/theme/color_schemes.dart';
 import 'package:bbarr/utils/check_platform.dart';
 import 'package:bbarr/database/item/barcode_item_entity.dart';
@@ -117,8 +118,8 @@ class _MyHomePageState extends State<MyHomePage> {
         Center(
           child: BarcodeList(),
         ),
-        const Center(
-          child: Text("FILTER"),
+         Center(
+          child: BarcodeFilter() //Text("FILTER"),
         ),
         const Center(), //const ScanScreen(),
         const Center(
