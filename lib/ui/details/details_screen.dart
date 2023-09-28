@@ -65,7 +65,7 @@ class DetailsScreen extends StatelessWidget {
                           margin: const EdgeInsets.all(10),
                           child: Center(
                             child:
-                                Text("Creation Date: ${item.acquisitionDate}"),
+                                Text("Acquired: ${item.acquisitionDate}"),
                           )),
                       Container(
                           color: Theme.of(context).highlightColor,
@@ -82,15 +82,29 @@ class DetailsScreen extends StatelessWidget {
                       Container(
                           color: Theme.of(context).highlightColor,
                           margin: const EdgeInsets.all(10),
-                          child: const Center(
-                            child: Text("Description: LoremIpsum"),
+                          child: Center(
+                            child: Text("Price: ${item.price}"),
                           )),
                       Container(
                           color: Theme.of(context).highlightColor,
                           margin: const EdgeInsets.all(10),
-                          child: const Center(
-                            child: Text("Creation Date: whatever"),
-                          ))
+                          child: Center(
+                            child: Text("Provider: ${item.provider}"),
+                          )),
+                      Container(
+                          color: Theme.of(context).highlightColor,
+                          margin: const EdgeInsets.all(10),
+                          child: Center(
+                            child: Text("Location: ${item.storageLocation}"),
+                          )),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                          color: Theme.of(context).highlightColor,
+                          margin: const EdgeInsets.all(10),
+                          child: Center(
+                            child: SingleChildScrollView(child: Text("Description: ${item.notes}")),
+                          )),
+                      
                     ],
                   ),
                 )
