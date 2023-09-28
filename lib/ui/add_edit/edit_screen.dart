@@ -1,169 +1,222 @@
+import 'dart:convert';
+
 import 'package:bbarr/database/item/barcode_item_entity.dart';
+import 'package:bbarr/main.dart';
+import 'package:bbarr/ui/add_edit/bookmark_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class EditScreen extends StatefulWidget {
-  @override
-  State<EditScreen> createState() => _EditScreenState();
-}
+class EditScreen extends StatelessWidget {
+  int? itemId;
+  late BarcodeItemEntity entity;
 
-class _EditScreenState extends State<EditScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   final TextEditingController _dateController = TextEditingController();
 
-  String barcode = "";
+  late BookmarkCheckbox checkBox;
 
-  String nameDescription = "";
-
-  int quantity = 0;
-
-  double price = 0.0;
-
-  DateTime acquisitionDate = DateTime.now();
-
-  String provider = "";
-
-  String storageLocation = "";
-
-  String notes = "";
-
-  bool favourite = false;
+  EditScreen({key, this.itemId});
 
   Future<void> _selectDate(BuildContext context) async {
-    DateTime? picked = (await showDatePicker(
+    DateTime selectedDate = !entity.acquisitionDate.isEmpty
+        ? DateTime.parse(entity.acquisitionDate)
+        : DateTime.now();
+
+    DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: selectedDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
-    ));
+    );
 
-    picked = (picked == null) ? DateTime.now() : picked;
-
-    if (picked != null && picked != acquisitionDate) {
-      acquisitionDate = picked;
-      _dateController.text = DateFormat('yyyy-MM-dd').format(acquisitionDate);
+    if (picked != null) {
+      // Update the entity and the _dateController with the selected date
+      entity.acquisitionDate = picked.toString();
+      _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
     }
+  }
+
+  Future<BarcodeItemEntity?> _fetchItem() async {
+    if (itemId != null) {
+      return await database.barcodeItemDao.findItemById(itemId!);
+    }
+
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
+    final String _titleAction = (itemId == null) ? "Add": "Edit";
+    final String _buttonAction = (itemId == null) ? "Create": "Update";
+
     return Scaffold(
         appBar: AppBar(
-          // TRY THIS: Try changing the color here to a specific color (to
-          // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-          // change color while the other colors stay the same.
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: const Text("Add item"),
+          title: Text('$_titleAction item'),
         ),
-        body: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Barcode'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please insert a valid barcode';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      barcode = value!;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Description name'),
-                    onSaved: (value) {
-                      nameDescription = value!;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Quantity'),
-                    keyboardType: TextInputType.number,
-                    onSaved: (value) {
-                      quantity = int.tryParse(value!) ?? 0;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Price'),
-                    keyboardType: TextInputType.number,
-                    onSaved: (value) {
-                      price = double.tryParse(value!) ?? 0.0;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _dateController,
-                    readOnly: true,
-                    onTap: () => _selectDate(context),
-                    decoration: const InputDecoration(
-                      labelText: 'Date of adquisition',
-                      suffixIcon: Icon(Icons.calendar_today),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please, select a date';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Provider'),
-                    onSaved: (value) {
-                      provider = value!;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Storage location'),
-                    onSaved: (value) {
-                      storageLocation = value!;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Notes'),
-                    onSaved: (value) {
-                      notes = value!;
-                    },
-                  ),
-                  CheckboxListTile(
-                    title: Text('Favourite'),
-                    subtitle: const Text('Add item to bookmarks'),
-                    activeColor: Colors.pink,
-                    value: favourite,
-                    selected: favourite,
-                    onChanged: (value) {
-                      setState(() {
-                        favourite = value!;
-                      });
-                    },
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-
-                        final newItem = BarcodeItemEntity(
-                          0,
-                          barcode,
-                          nameDescription,
-                          quantity,
-                          price,
-                          acquisitionDate.toIso8601String(),
-                          provider,
-                          storageLocation,
-                          notes,
-                          favourite,
-                        );
-                      }
-                    },
-                    child: Text('Create item'),
-                  ),
+        body: FutureBuilder(
+          future: _fetchItem(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return AlertDialog(
+                title: Text("An error ocurred!"),
+                content: Text("Cannot retrieve item from database"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context, "OK"),
+                      child: Text("OK"))
                 ],
+              );
+            }
+
+            if (!snapshot.hasData || snapshot.data == null) {
+              entity =
+                  BarcodeItemEntity(0, '', '', 0, 0, '', '', '', '', false);
+            } else {
+              entity = snapshot.data!;
+            }
+
+            print(entity.acquisitionDate);
+
+            final datePicker = TextFormField(
+              controller: _dateController,
+              readOnly: true,
+              onTap: () => _selectDate(context),
+              decoration: const InputDecoration(
+                labelText: 'Date of adquisition',
+                suffixIcon: Icon(Icons.calendar_today),
               ),
-            )));
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please, select a date';
+                }
+                return null;
+              },
+            );
+
+            datePicker.controller?.text = entity.acquisitionDate.isNotEmpty
+                ? DateFormat('yyyy-MM-dd')
+                    .format(DateTime.parse(entity.acquisitionDate))
+                : '';
+
+            return Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Barcode'),
+                        initialValue: entity.barcode,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please insert a valid barcode';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          entity.barcode = value!;
+                        },
+                      ),
+                      TextFormField(
+                        initialValue: entity.nameDescription,
+                        decoration:
+                            InputDecoration(labelText: 'Description name'),
+                        onSaved: (value) {
+                          entity.nameDescription = value!;
+                        },
+                      ),
+                      TextFormField(
+                        initialValue: entity.quantity.toString(),
+                        decoration: InputDecoration(labelText: 'Quantity'),
+                        keyboardType: TextInputType.number,
+                        onSaved: (value) {
+                          entity.quantity = int.tryParse(value!) ?? 0;
+                        },
+                      ),
+                      TextFormField(
+                        initialValue: entity.price.toString(),
+                        decoration: InputDecoration(labelText: 'Price'),
+                        keyboardType: TextInputType.number,
+                        onSaved: (value) {
+                          entity.price = double.tryParse(value!) ?? 0.0;
+                        },
+                      ),
+                      datePicker,
+                      TextFormField(
+                        initialValue: entity.provider,
+                        decoration: InputDecoration(labelText: 'Provider'),
+                        onSaved: (value) {
+                          entity.provider = value!;
+                        },
+                      ),
+                      TextFormField(
+                        initialValue: entity.storageLocation,
+                        decoration:
+                            InputDecoration(labelText: 'Storage location'),
+                        onSaved: (value) {
+                          entity.storageLocation = value!;
+                        },
+                      ),
+                      TextFormField(
+                        initialValue: entity.notes,
+                        decoration: InputDecoration(labelText: 'Notes'),
+                        onSaved: (value) {
+                          entity.notes = value!;
+                        },
+                      ),
+                      checkBox = BookmarkCheckbox(isBookmark: entity.favourite),
+                      ElevatedButton(
+                        onPressed: () => _commitToDatabase(context),
+                        child: Text('$_buttonAction item'),
+                      ),
+                    ],
+                  ),
+                ));
+          },
+        ));
   }
+
+  void _commitToDatabase(BuildContext context) {
+    
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      print("Saving to database...");
+
+      entity.favourite = checkBox.isBookmark;
+
+      JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+      String pretty = encoder.convert(entity.toJson());
+      print(pretty);
+
+      //database.barcodeItemDao.updateItem();
+      if(itemId!=null) {
+        database.barcodeItemDao.updateItem(entity)
+          .then((value){
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Inserted item successfully")));
+            Navigator.pop(context);
+          }).catchError((error){
+            showDialog(context: context,
+            builder: (context){
+              return AlertDialog(
+                title: Text('Error!'),
+                content: Text('An error occurred while inserting new item in DB. More information: $error'),
+                actions: [TextButton(onPressed: ()=>Navigator.pop(context), child: Text('OK'))],
+              );
+            });
+          });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('NOT IMPLEMENTED YET')));
+        Navigator.pop(context);
+      }
+    }
+  }
+
+  //@override
+  //State<EditScreen> createState() => _EditScreenState();
 }

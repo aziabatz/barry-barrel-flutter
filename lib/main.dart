@@ -37,9 +37,13 @@ Future<void> main() async {
         .databaseBuilder('inventory_test.db')
         .build();
 
-    //barcodeItems.forEach((element) {dao.deleteItem(element);});
+    database.barcodeItemDao.findAllItems().then((value) {
+      if (value.isEmpty) {
+        database.barcodeItemDao.insertAll(barcodeItems);
+      }
+    });
 
-    //dao.insertAll(barcodeItems);
+    //barcodeItems.forEach((element) {dao.deleteItem(element);});
   } on CameraException catch (e) {
     print('Error in fetching the cameras: $e');
   }
@@ -120,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
         const Center(
           child: Text("FILTER"),
         ),
-        const ScanScreen(),
+        const Center(), //const ScanScreen(),
         const Center(
           child: Text("UPDATES"),
         ),
@@ -173,7 +177,6 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(BarryBarrel.wrench), label: "Settings"),
         ],
       ),
-      
     );
   }
 }
