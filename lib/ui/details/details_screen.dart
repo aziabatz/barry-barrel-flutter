@@ -61,32 +61,32 @@ class DetailsScreen extends StatelessWidget {
                     crossAxisCount: 2,
                     children: [
                       Container(
-                          color: Colors.amber.shade100,
+                          color: Theme.of(context).highlightColor,
                           margin: const EdgeInsets.all(10),
                           child: Center(
                             child:
                                 Text("Creation Date: ${item.acquisitionDate}"),
                           )),
                       Container(
-                          color: Colors.amber.shade100,
+                          color: Theme.of(context).highlightColor,
                           margin: const EdgeInsets.all(10),
                           child: Center(
                             child: Text("Barcode: ${item.barcode}"),
                           )),
                       Container(
-                          color: Colors.amber.shade100,
+                          color: Theme.of(context).highlightColor,
                           margin: const EdgeInsets.all(10),
                           child: Center(
                             child: Text("Quantity: ${item.quantity}"),
                           )),
                       Container(
-                          color: Colors.amber.shade100,
+                          color: Theme.of(context).highlightColor,
                           margin: const EdgeInsets.all(10),
                           child: const Center(
                             child: Text("Description: LoremIpsum"),
                           )),
                       Container(
-                          color: Colors.amber.shade100,
+                          color: Theme.of(context).highlightColor,
                           margin: const EdgeInsets.all(10),
                           child: const Center(
                             child: Text("Creation Date: whatever"),
