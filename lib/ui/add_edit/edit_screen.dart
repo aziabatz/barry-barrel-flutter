@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:convert';
 
 import 'package:bbarr/database/item/barcode_item_entity.dart';
 import 'package:bbarr/main.dart';
@@ -12,6 +12,8 @@ class EditScreen extends StatelessWidget {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _dateController = TextEditingController();
+
+  late BookmarkCheckbox checkBox;
 
   EditScreen({key, this.itemId});
 
@@ -68,7 +70,12 @@ class EditScreen extends StatelessWidget {
               );
             }
 
-            entity = snapshot.data!;
+            if (!snapshot.hasData || snapshot.data == null) {
+              entity =
+                  BarcodeItemEntity(0, '', '', 0, 0, '', '', '', '', false);
+            } else {
+              entity = snapshot.data!;
+            }
 
             print(entity.acquisitionDate);
 
@@ -159,26 +166,9 @@ class EditScreen extends StatelessWidget {
                           entity.notes = value!;
                         },
                       ),
-                      BookmarkCheckbox(isBookmark: entity.favourite),
+                      checkBox = BookmarkCheckbox(isBookmark: entity.favourite),
                       ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-
-                            // final newItem = BarcodeItemEntity(
-                            //   0,
-                            //   barcode,
-                            //   nameDescription,
-                            //   quantity,
-                            //   price,
-                            //   acquisitionDate.toIso8601String(),
-                            //   provider,
-                            //   storageLocation,
-                            //   notes,
-                            //   favourite,
-                            // );
-                          }
-                        },
+                        onPressed: () => _commitToDatabase(context),
                         child: Text('Create item'),
                       ),
                     ],
@@ -188,8 +178,42 @@ class EditScreen extends StatelessWidget {
         ));
   }
 
+  void _commitToDatabase(BuildContext context) {
+    
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      print("Saving to database...");
+
+      entity.favourite = checkBox.isBookmark;
+
+      JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+      String pretty = encoder.convert(entity.toJson());
+      print(pretty);
+
+      //database.barcodeItemDao.updateItem();
+      if(itemId!=null) {
+        database.barcodeItemDao.updateItem(entity)
+          .then((value){
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Inserted item successfully")));
+            Navigator.pop(context);
+          }).catchError((error){
+            showDialog(context: context,
+            builder: (context){
+              return AlertDialog(
+                title: Text('Error!'),
+                content: Text('An error occurred while inserting new item in DB. More information: $error'),
+                actions: [TextButton(onPressed: ()=>Navigator.pop(context), child: Text('OK'))],
+              );
+            });
+          });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('NOT IMPLEMENTED YET')));
+        Navigator.pop(context);
+      }
+    }
+  }
+
   //@override
   //State<EditScreen> createState() => _EditScreenState();
 }
-
-//TODO Crear un widget stateless con el formulario... Y dentro de este widget stateful que dibujara el checkbox

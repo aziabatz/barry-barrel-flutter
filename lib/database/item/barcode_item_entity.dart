@@ -28,4 +28,26 @@ class BarcodeItemEntity{
     this.notes,
     this.favourite
   );
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'barcode': barcode,
+      'nameDescription': nameDescription,
+      'quantity': quantity,
+      'price': price,
+      'acquisitionDate': acquisitionDate,
+      'provider': provider,
+      'storageLocation': storageLocation,
+      'notes': notes,
+      'favourite': favourite,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'BarcodeItemEntity{id: $id, barcode: $barcode, nameDescription: $nameDescription, '
+        'quantity: $quantity, price: $price, acquisitionDate: $acquisitionDate, '
+        'provider: $provider, storageLocation: $storageLocation, notes: $notes, favourite: $favourite}';
+  }
 }

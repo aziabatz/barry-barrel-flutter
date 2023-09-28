@@ -51,11 +51,13 @@ class BarcodeList extends StatelessWidget {
                             children: [
                               SimpleDialogOption(
                                   onPressed: () {
+                                    Navigator.pop(context);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 EditScreen(itemId: itemList[index].id,)));
+                                    //Aqui quiero que se cierre el dialogo, para que cuando vuelva de editscreen lo encuentre ya cerrado
                                   },
                                   child: const Row(
                                     children: [
