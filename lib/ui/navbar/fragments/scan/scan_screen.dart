@@ -5,41 +5,35 @@ import 'package:bbarr/main.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/widgets.dart';
 
-
-class ScanScreen extends StatefulWidget{
+class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
-
 
   @override
   State<StatefulWidget> createState() => _ScanScreenState();
-
 }
 
-class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver{
-
+class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
   CameraController? controller;
   bool _isCameraInit = false;
 
-
   @override
   void initState() {
-    if(!isDesktop) {
+    super.initState();
+    if (!isDesktop) {
       onNewCameraSelected(cameras[0]);
     }
-    super.initState();
   }
-
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     final CameraController? cameraController = controller;
-    if(cameraController == null || !cameraController.value.isInitialized) {
+    if (cameraController == null || !cameraController.value.isInitialized) {
       return;
     }
 
-    if(state == AppLifecycleState.inactive){
+    if (state == AppLifecycleState.inactive) {
       cameraController.dispose();
-    } else if (state == AppLifecycleState.resumed){
+    } else if (state == AppLifecycleState.resumed) {
       onNewCameraSelected(cameraController.description);
     }
   }
@@ -52,30 +46,30 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver{
 
   void onNewCameraSelected(CameraDescription camera) async {
     final previousCamera = controller;
-    final CameraController actualController = CameraController(camera,
-      ResolutionPreset.medium);
+    final CameraController actualController =
+        CameraController(camera, ResolutionPreset.medium);
 
     await previousCamera?.dispose();
 
-    if(mounted){
+    if (mounted) {
       setState(() {
         controller = actualController;
       });
     }
 
     controller?.addListener(() {
-      if(mounted){
+      if (mounted) {
         setState(() {});
       }
     });
 
-    try{
+    try {
       await controller?.initialize();
-    } on CameraException catch(e) {
+    } on CameraException catch (e) {
       print('Error initializing camera: $e');
     }
 
-    if(mounted){
+    if (mounted) {
       setState(() {
         _isCameraInit = controller!.value.isInitialized;
       });
@@ -84,17 +78,20 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver{
 
   @override
   Widget build(BuildContext context) {
-    if(Platform.isLinux || Platform.isWindows || Platform.isMacOS){
+    if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
       return const Center(
-        child: Text("Barcode scan from camera is still not implemented in this platform"),
+        child: Text(
+            "Barcode scan from camera is still not implemented in this platform"),
       );
     }
     return _isCameraInit
-        ? AspectRatio(
-      //FIXME Aspect ratio to fill container or screen
-      aspectRatio: 1 / controller!.value.aspectRatio,
-      child: controller!.buildPreview(),
-    )
+        ? Center(
+            child: AspectRatio(
+              //FIXME Aspect ratio to fill container or screen
+              aspectRatio: 1 / controller!.value.aspectRatio,
+              child: controller!.buildPreview(),
+            ),
+          )
         : Container();
   }
 }
