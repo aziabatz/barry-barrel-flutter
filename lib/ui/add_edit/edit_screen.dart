@@ -46,10 +46,13 @@ class EditScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String _titleAction = (itemId == null) ? "Add": "Edit";
+    final String _buttonAction = (itemId == null) ? "Create": "Update";
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text("Add item"),
+          title: Text('$_titleAction item'),
         ),
         body: FutureBuilder(
           future: _fetchItem(),
@@ -169,7 +172,7 @@ class EditScreen extends StatelessWidget {
                       checkBox = BookmarkCheckbox(isBookmark: entity.favourite),
                       ElevatedButton(
                         onPressed: () => _commitToDatabase(context),
-                        child: Text('Create item'),
+                        child: Text('$_buttonAction item'),
                       ),
                     ],
                   ),
