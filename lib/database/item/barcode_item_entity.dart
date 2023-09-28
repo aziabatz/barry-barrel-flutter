@@ -3,8 +3,9 @@ import 'package:floor/floor.dart';
 
 @Entity(tableName: 'barcode_items')
 class BarcodeItemEntity{
+
   @PrimaryKey(autoGenerate: true)
-  final int id;
+  int? id;
 
   String barcode;
   String nameDescription;

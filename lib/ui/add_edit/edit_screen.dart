@@ -46,8 +46,8 @@ class EditScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String _titleAction = (itemId == null) ? "Add": "Edit";
-    final String _buttonAction = (itemId == null) ? "Create": "Update";
+    final String _titleAction = (itemId == null) ? "Add" : "Edit";
+    final String _buttonAction = (itemId == null) ? "Create" : "Update";
 
     return Scaffold(
         appBar: AppBar(
@@ -75,7 +75,7 @@ class EditScreen extends StatelessWidget {
 
             if (!snapshot.hasData || snapshot.data == null) {
               entity =
-                  BarcodeItemEntity(0, '', '', 0, 0, '', '', '', '', false);
+                  BarcodeItemEntity(null, '', '', 0, 0, '', '', '', '', false);
             } else {
               entity = snapshot.data!;
             }
@@ -181,8 +181,28 @@ class EditScreen extends StatelessWidget {
         ));
   }
 
+  void _commitMessageSuccess(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+    Navigator.pop(context, true);
+  }
+
+  void _commitMessageFail(BuildContext context, String message) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error!'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(context), child: Text('OK'))
+            ],
+          );
+        });
+  }
+
   void _commitToDatabase(BuildContext context) {
-    
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
@@ -195,24 +215,21 @@ class EditScreen extends StatelessWidget {
       print(pretty);
 
       //database.barcodeItemDao.updateItem();
-      if(itemId!=null) {
-        database.barcodeItemDao.updateItem(entity)
-          .then((value){
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Inserted item successfully")));
-            Navigator.pop(context);
-          }).catchError((error){
-            showDialog(context: context,
-            builder: (context){
-              return AlertDialog(
-                title: Text('Error!'),
-                content: Text('An error occurred while inserting new item in DB. More information: $error'),
-                actions: [TextButton(onPressed: ()=>Navigator.pop(context), child: Text('OK'))],
-              );
-            });
-          });
+      if (itemId != null) {
+        database.barcodeItemDao.updateItem(entity).then((value) {
+          _commitMessageSuccess(
+              context, "Comitted changes for item successfully");
+        }).catchError((error) {
+          _commitMessageFail(context,
+              'An error occurred while updating the item in DB. More information: $error');
+        });
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('NOT IMPLEMENTED YET')));
-        Navigator.pop(context);
+        database.barcodeItemDao.insertItem(entity).then((value) {
+          _commitMessageSuccess(context, "Inserted new item successfully");
+        }).catchError((error) {
+          _commitMessageFail(context,
+              'An error occurred while inserting new item in DB. More information: $error');
+        });
       }
     }
   }
