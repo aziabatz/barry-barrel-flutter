@@ -72,10 +72,13 @@ class MyApp extends StatelessWidget {
       //     .copyWith(brightness: Brightness.dark),
       //   useMaterial3: true,
       // ),
-      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+      theme: ThemeData(useMaterial3: true, colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber)),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber, brightness: Brightness.dark)),
       themeMode: ThemeMode.system,
-      home: const MyHomePage(title: 'BarryBarrel'),
+      //home: const MyHomePage(title: 'BarryBarrel'),
+      routes: {
+        '/': (context) => const MyHomePage(title: 'BarryBarrel')
+      }
     );
   }
 }
@@ -157,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         //backgroundColor: Colors.amber.shade100,
+        elevation: 30,
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         showUnselectedLabels: false,
         currentIndex: _barItem,

@@ -1,4 +1,6 @@
+import 'package:bbarr/ui/navbar/fragments/filter/backdrop_container.dart';
 import 'package:flutter/material.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class BackdropScreen extends StatefulWidget {
   @override
@@ -29,8 +31,8 @@ class _BackdropState extends State<BackdropScreen>
             rect: animation,
             child: Material(
               borderRadius: const BorderRadius.only(
-                  topLeft: const Radius.circular(10.0),
-                  topRight: const Radius.circular(10.0)),
+                  topLeft: const Radius.circular(50.0),
+                  topRight: const Radius.circular(50.0)),
               elevation: 24.0,
               color: Theme.of(context).secondaryHeaderColor,
               child: Column(children: <Widget>[
@@ -47,7 +49,9 @@ class _BackdropState extends State<BackdropScreen>
                     ),
                   )),
                 ),
-                Expanded(child: Center(child: Text("No filter fields for now :(")))
+                Expanded(
+                  child: Center(child: Text("No filter fields for now :("))
+                )
               ]),
             ),
           )
@@ -69,8 +73,8 @@ class _BackdropState extends State<BackdropScreen>
   @override
   void initState() {
     super.initState();
-    _controller = new AnimationController(
-        duration: const Duration(milliseconds: 100), value: 1.0, vsync: this);
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 100), value: 0.1, vsync: this);
   }
 
   @override

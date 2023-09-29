@@ -46,6 +46,7 @@ dependencies:
   sqlite3: ^2.1.0
   intl: ^0.17.0
   backdrop: ^0.9.1
+  sliding_up_panel: ^2.0.0+1
 
 dev_dependencies:
   flutter_test:
