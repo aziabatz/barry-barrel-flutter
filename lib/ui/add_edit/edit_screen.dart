@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 
 class EditScreen extends StatelessWidget {
   int? itemId;
+  String? barcodeContent;
+
   late BarcodeItemEntity entity;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -15,7 +17,7 @@ class EditScreen extends StatelessWidget {
 
   late BookmarkCheckbox checkBox;
 
-  EditScreen({key, this.itemId});
+  EditScreen({key, this.itemId, this.barcodeContent});
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime selectedDate = !entity.acquisitionDate.isEmpty
@@ -74,8 +76,10 @@ class EditScreen extends StatelessWidget {
             }
 
             if (!snapshot.hasData || snapshot.data == null) {
+              final String barcode = (barcodeContent == null) ? '': barcodeContent!;
               entity =
-                  BarcodeItemEntity(null, '', '', 0, 0, '', '', '', '', false);
+                  BarcodeItemEntity(null, barcode, '', 0, 0, '', '', '', '', false);
+              
             } else {
               entity = snapshot.data!;
             }
