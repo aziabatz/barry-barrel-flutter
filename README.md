@@ -9,7 +9,7 @@ This is the repository for my _barcode scanner & stock manager_ app, codenamed B
 
 - **Stock Management:** The application is designed specifically for tracking and managing stock items using a local database.
 
-## Additional Features
+## Additional Features (working on it)
 
 - **Filtering and Search:** Enhancement upon the stock management with filtering and search capabilities to quickly find specific items.
 
